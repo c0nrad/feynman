@@ -1,5 +1,6 @@
-import { Line, Point, linesAt } from "./line";
+import { Line, Point, linesAt, vertexAt } from "./line";
 import { getParticleByID } from "./particle";
+import { Vertex } from "./vertext";
 
 export class Interaction {
     lines: Line[]
@@ -42,7 +43,7 @@ export class Interaction {
         return ""
     }
 
-    vertexes(): Point[] {
+    points(): Point[] {
         let out = []
         for (let l of this.lines) {
             if (!out.some(p => p.X == l.a.X && p.Y == l.a.Y)) {
@@ -54,6 +55,10 @@ export class Interaction {
             }
         }
         return out
+    }
+
+    vertex(p: Point): Vertex {
+        return vertexAt(p, this.lines)
     }
 
     at(p: Point): Line[] {

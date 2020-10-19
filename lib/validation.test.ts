@@ -66,4 +66,11 @@ describe("validation", () => {
         let i8 = ParseInteraction("SIGMA_PLUS + NEUTRON -> SIGMA_MINUS + PROTON")
         expect(hasError(validateInteraction(i7), "CHARGE_CONSERVATION")).to.be.true;
     })
+
+    it("check for overlapping lines", () => {
+        let i = new Interaction("overlapping", [new Line(0, 0, 1, 1, "PHOTON"), new Line(0, 0, 1, 1, "PROTON")])
+        let errs = validateInteraction(i)
+
+        expect(hasError(errs, "OVERLAPPING_LINES")).to.be.true;
+    })
 })

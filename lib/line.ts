@@ -1,4 +1,5 @@
 import { getParticleByID, Particle } from "./particle";
+import { Vertex } from "./vertext";
 
 export class Point {
     X: number
@@ -85,6 +86,23 @@ export function linesAt(p: Point, lines: Line[]): Line[] {
 
         if (l.b.X == p.X && l.b.Y == p.Y) {
             out.push(l)
+        }
+    }
+    return out
+}
+
+export function vertexAt(p: Point, lines: Line[]): Vertex {
+    return new Vertex(p, linesAt(p, lines))
+}
+
+export function overlappingLines(lines: Line[]): Line[] {
+    let out = []
+    for (let i1 = 0; i1 < lines.length; i1++) {
+        for (let i2 = i1 + 1; i2 < lines.length; i2++) {
+            if ((lines[i1].a.equals(lines[i2].a) && lines[i1].b.equals(lines[i2].b)) ||
+                lines[i1].b.equals(lines[i2].a) && lines[i1].a.equals(lines[i2].b)) {
+                out.push(lines[i1])
+            }
         }
     }
     return out

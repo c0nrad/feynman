@@ -8,7 +8,7 @@ const expect = chai.expect;
 
 describe("interaction", () => {
     it("vertexes()", () => {
-        let ms = getInteractionByName("Moller Scattering").vertexes()
+        let ms = getInteractionByName("Moller Scattering").points()
         expect(ms.length).to.equal(6)
     })
 

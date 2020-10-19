@@ -20,7 +20,6 @@ export class Particle {
     isNeutrino: boolean
 
     contents: string[]
-
     additionalIds: string[]
 
     constructor(id: string, additionalIds: string[], name: string, anti: string, mass: number, generation: number,
@@ -30,6 +29,10 @@ export class Particle {
 
     charge(): number {
         return this.charge3 / 3;
+    }
+
+    isAnti(): boolean {
+        return this.id.indexOf("ANTI") >= 0
     }
 }
 
