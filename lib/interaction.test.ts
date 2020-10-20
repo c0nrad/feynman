@@ -8,12 +8,12 @@ const expect = chai.expect;
 
 describe("interaction", () => {
     it("vertexes()", () => {
-        let ms = getInteractionByName("Moller Scattering").points()
+        let ms = getInteractionByName("MOLLER_SCATTERING").points()
         expect(ms.length).to.equal(6)
     })
 
     it("in()", () => {
-        let ms = getInteractionByName("Moller Scattering")
+        let ms = getInteractionByName("MOLLER_SCATTERING")
         expect(ms.in().length).to.equals(2)
         for (let l of ms.in()) {
             expect(l.right().equals(new Point(2, 2))).to.be.true
@@ -25,9 +25,9 @@ describe("interaction", () => {
     })
 
     it("getInteractionByName clone()", () => {
-        let ms = getInteractionByName("Moller Scattering")
+        let ms = getInteractionByName("MOLLER_SCATTERING")
         let old = ms.lines[0].a.X
         ms.lines[0].a.X = 100
-        expect(getInteractionByName("Moller Scattering").lines[0].a.X).to.equals(old)
+        expect(getInteractionByName("MOLLER_SCATTERING").lines[0].a.X).to.equals(old)
     })
 })

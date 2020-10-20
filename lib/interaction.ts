@@ -44,7 +44,7 @@ export class Interaction {
     }
 
     points(): Point[] {
-        let out = []
+        let out: Point[] = []
         for (let l of this.lines) {
             if (!out.some(p => p.X == l.a.X && p.Y == l.a.Y)) {
                 out.push(l.a)
@@ -98,6 +98,16 @@ export class Interaction {
         return out
     }
 
+    massIn(): number {
+        let out = 0;
+        for (let l of this.in()) {
+            out += l.particle.mass
+        }
+
+        return out
+    }
+
+
     baryonCountOut(): number {
         let out = 0;
         for (let l of this.out()) {
@@ -135,20 +145,99 @@ export class Interaction {
         }
         return out
     }
+
+    update(old: Line, current: Line) {
+        for (let l of this.lines) {
+            if (l.equals(old)) {
+                l.a = current.a
+                l.b = current.b
+                l.particle = current.particle
+                return
+            }
+        }
+        throw new Error("could not find particle" + old + " " + current)
+    }
+
+    equals(interaction: Interaction): boolean {
+        if (interaction.name != this.name) {
+            return false
+        }
+
+        if (interaction.lines.length != this.lines.length) {
+            return false
+        }
+
+        let usedIndex: number[] = []
+        for (let l of interaction.lines) {
+            let isFound = false
+            for (let i = 0; i < this.lines.length; i++) {
+                if (this.lines[i].equals(l) && usedIndex.indexOf(i) == -1) {
+                    usedIndex.push(i)
+                    isFound = true
+                    break
+                }
+            }
+
+            if (!isFound) {
+                return false
+            }
+        }
+        return true
+    }
 }
 
 export function getInteractionByName(name: string): Interaction {
-    return ExampleInteractions.find(i => i.name == name).clone()
+    let interaction = ExampleInteractions.find(i => i.name == name)
+    if (!interaction || interaction.name != name) {
+        throw new Error("invalid interaction name: " + name)
+    }
+
+    return interaction.clone()
 }
 
-
 var ExampleInteractions: Interaction[] = [
-    new Interaction("Moller Scattering", [
+    new Interaction("MOLLER_SCATTERING", [
         new Line(1, 1, 2, 2, "POSITRON"),
         new Line(1, 3, 2, 2, "ELECTRON"),
         new Line(2, 2, 4, 2, "PHOTON"),
         new Line(4, 2, 5, 1, "ELECTRON"),
         new Line(4, 2, 5, 3, "POSITRON")
+    ]),
+
+    new Interaction("MUON_DECAY", [
+        new Line(1, 1, 2, 2, "MUON"),
+        new Line(2, 2, 3, 1, "MUON_NEUTRINO"),
+        new Line(2, 2, 3, 3, "W_MINUS"),
+        new Line(3, 3, 4, 2, "ELECTRON"),
+        new Line(3, 3, 4, 4, "ELECTRON_ANTINEUTRINO")
+    ]),
+
+    new Interaction("PION_EXCHANGE", [
+        new Line(1, 1, 4, 2, "DOWN"),
+        new Line(1, 2, 3, 3, "UP"),
+        new Line(1, 3, 3, 4, "UP"),
+
+        new Line(4, 2, 6, 1, "DOWN"),
+        new Line(3, 3, 6, 2, "UP"),
+        new Line(4, 4, 6, 3, "UP"),
+
+        new Line(3, 4, 3, 6, "UP"),
+        new Line(4, 4, 4, 6, "ANTI_UP"),
+
+        new Line(3, 3, 3, 4, "GLUON"),
+        new Line(4, 2, 4, 4, "GLUON"),
+
+        //bottom
+        new Line(1, 7, 4, 6, "UP"),
+        new Line(1, 8, 4, 7, "UP"),
+        new Line(1, 9, 3, 8, "DOWN"),
+
+        new Line(3, 6, 6, 7, "DOWN"),
+        new Line(4, 7, 6, 8, "UP"),
+        new Line(3, 8, 6, 9, "UP"),
+
+        new Line(3, 6, 3, 8, "GLUON"),
+        new Line(4, 6, 4, 7, "GLUON"),
     ])
 ]
 

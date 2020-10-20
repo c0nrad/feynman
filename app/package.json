@@ -20,12 +20,16 @@
     "@angular/platform-browser-dynamic": "~10.0.3",
     "@angular/router": "~10.0.3",
     "@types/fabric": "^3.6.8",
+    "@types/mathjax": "0.0.36",
     "bootstrap": "^4.5.3",
     "fabric": "^4.2.0",
     "jquery": "^3.5.1",
+    "mathjax": "^3.1.2",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.5",
+    "tex-to-svg": "^0.2.0",
     "tslib": "^2.0.0",
+    "uuid": "^8.3.1",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

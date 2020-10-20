@@ -32,7 +32,7 @@ var ErrorDescriptions = [
     { id: "GLUON_LEPTON_INTERACTION", description: "Leptons do not experience strong force" },
     { id: "PHOTON_NEUTRAL_INTERACTION", description: "Neutral particles do not experience electromagnetic force" },
 
-
+    { id: "ELECTROMAGNETIC_VERTEX_COUNT", description: "Electromagnetic vertex should have 3 lines" }
 ]
 
 export function validateInteraction(interaction: Interaction): ValidationError[] {

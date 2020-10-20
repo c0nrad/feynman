@@ -15,10 +15,13 @@
                     Examples
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Muon Decay</a>
-                    <a class="dropdown-item" href="#">Electron Scattering</a>
-                    <a class="dropdown-item" href="#">Pion Exchange</a>
-                    <a class="dropdown-item" href="#">Beta Decay</a>
+                    <a class="dropdown-item" [routerLink]="['']" [queryParams]="{'example':'MUON_DECAY'}">Muon Decay</a>
+                    <a class="dropdown-item" [routerLink]="['']" [queryParams]="{'example': 'MOLLER_SCATTERING'}">Moller
+                        Scattering</a>
+                    <a class="dropdown-item" [routerLink]="['']" [queryParams]="{'example': 'PION_EXCHANGE'}">Pion
+                        Exchange</a>
+                    <a class="dropdown-item" [routerLink]="['']" [queryParams]="{'example': 'BETA_DECAY'}">Beta
+                        Decay</a>
                 </div>
             </li>
 

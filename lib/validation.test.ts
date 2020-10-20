@@ -25,7 +25,7 @@ describe("validation", () => {
     })
 
     it("Moller Scattering valid", () => {
-        let ms = getInteractionByName("Moller Scattering")
+        let ms = getInteractionByName("MOLLER_SCATTERING")
         let errs = validateInteraction(ms)
         expect(errs.length).to.equal(0);
     })

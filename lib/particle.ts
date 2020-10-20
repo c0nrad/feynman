@@ -1,26 +1,27 @@
 import { plainToClass } from 'class-transformer';
 
 export class Particle {
-    id: string
-    name: string
-    anti: string
+    id: string = ""
+    name: string = ""
+    latex: string = ""
+    anti: string = ""
 
-    mass: number
-    generation: number
+    mass: number = 0
+    generation: number = 0
 
-    charge3: number
-    baryonCount: number
-    leptonCount: number
+    charge3: number = 0
+    baryonCount: number = 0
+    leptonCount: number = 0
 
-    isLepton: boolean
-    isBoson: boolean
-    isQuark: boolean
-    isBaryon: boolean
-    isMeson: boolean
-    isNeutrino: boolean
+    isLepton: boolean = false
+    isBoson: boolean = false
+    isQuark: boolean = false
+    isBaryon: boolean = false
+    isMeson: boolean = false
+    isNeutrino: boolean = false
 
-    contents: string[]
-    additionalIds: string[]
+    contents: string[] = []
+    additionalIds: string[] = []
 
     constructor(id: string, additionalIds: string[], name: string, anti: string, mass: number, generation: number,
         c3: number, b: number, isLepton: boolean, isBoson: boolean, isQuark: boolean,
@@ -32,29 +33,33 @@ export class Particle {
     }
 
     isAnti(): boolean {
-        return this.id.indexOf("ANTI") >= 0
+        return this.id.indexOf("ANTI") >= 0 || this.id == "POSITRON"
+    }
+
+    clone(): Particle {
+        return Object.assign(Object.create(this), this)
     }
 }
 
 var Particles: Particle[] = plainToClass(Particle, [
     // Quarks
     {
-        id: "UP", name: "Up Quark", anti: "ANTI_UP", mass: 3, generation: 1,
+        id: "UP", name: "Up Quark", anti: "ANTI_UP", latex: "u", mass: 3, generation: 1,
         charge3: 2, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTI_UP", name: "Up Antiquark", anti: "UP", mass: 3, generation: 1,
+        id: "ANTI_UP", name: "Up Antiquark", anti: "UP", latex: "\\overline{u}", mass: 3, generation: 1,
         charge3: -2, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "DOWN", name: "Down Quark", anti: "ANTI_DOWN", mass: 7, generation: 1,
+        id: "DOWN", name: "Down Quark", anti: "ANTI_DOWN", latex: "d", mass: 7, generation: 1,
         charge3: -1, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTI_DOWN", name: "Down Antiquark", anti: "DOWN", mass: 7, generation: 1,
+        id: "ANTI_DOWN", name: "Down Antiquark", anti: "DOWN", latex: "\\overline{d}", mass: 7, generation: 1,
         charge3: 1, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
@@ -101,87 +106,91 @@ var Particles: Particle[] = plainToClass(Particle, [
 
     // Leptons 
     {
-        id: "ELECTRON", name: "Electron", anti: "POSITRON", mass: .51099, generation: 1,
+        id: "ELECTRON", name: "Electron", anti: "POSITRON", latex: "e^-", mass: .51099, generation: 1,
         charge3: -3, baryonCount: 0, leptonCount: 1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "POSITRON", name: "Positron", anti: "ELECTRON", mass: .51099, generation: 1,
+        id: "POSITRON", name: "Positron", anti: "ELECTRON", latex: "e^{+}", mass: .51099, generation: 1,
         charge3: 3, baryonCount: 0, leptonCount: -1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "MUON", name: "Muon", anti: "ANTIMUON", mass: 105.659, generation: 2,
+        id: "MUON", name: "Muon", anti: "ANTIMUON", latex: "\\mu", mass: 105.659, generation: 2,
         charge3: -3, baryonCount: 0, leptonCount: 1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTIMUON", name: "Antimuon", anti: "MUON", mass: 105.659, generation: 2,
+        id: "ANTIMUON", name: "Antimuon", anti: "MUON", latex: "\\overline{\\mu}", mass: 105.659, generation: 2,
         charge3: 3, baryonCount: 0, leptonCount: -1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "TAU", name: "Tau", anti: "ANTITAU", mass: 1776.99, generation: 3,
+        id: "TAU", name: "Tau", anti: "ANTITAU", latex: "\\tau", mass: 1776.99, generation: 3,
         charge3: -3, baryonCount: 0, leptonCount: 1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTITAU", name: "Antitau", anti: "TAU", mass: 1776.99, generation: 3,
+        id: "ANTITAU", name: "Antitau", anti: "TAU", latex: "\\overline{\\tau}", mass: 1776.99, generation: 3,
         charge3: 3, baryonCount: 0, leptonCount: -1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
 
     // Neutrinos
     {
-        id: "ELECTRON_NEUTRINO", name: "Electron Neutrino", anti: "ELECTRON_ANTINEUTRINO", mass: 0, generation: 1,
+        id: "ELECTRON_NEUTRINO", name: "Electron Neutrino", anti: "ELECTRON_ANTINEUTRINO", latex: "\\nu_e", mass: 0, generation: 1,
         charge3: 0, baryonCount: 0, leptonCount: 1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: true, additionalIds: [], contents: []
     },
     {
-        id: "ELECTRON_ANTINEUTRINO", name: "Electron Antineutrino", anti: "ELECTRON_NEUTRINO", mass: 0, generation: 1,
+        id: "ELECTRON_ANTINEUTRINO", name: "Electron Antineutrino", anti: "ELECTRON_NEUTRINO", latex: "\\overline{\\nu_e}", mass: 0, generation: 1,
         charge3: 0, baryonCount: 0, leptonCount: -1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: true, additionalIds: [], contents: []
     },
     {
-        id: "MUON_NEUTRINO", name: "Muon Neutrino", anti: "MUON_ANTINEUTRINO", mass: 0, generation: 2,
+        id: "MUON_NEUTRINO", name: "Muon Neutrino", anti: "MUON_ANTINEUTRINO", latex: "\\nu_{\\mu}", mass: 0, generation: 2,
         charge3: 0, baryonCount: 0, leptonCount: 1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: true, additionalIds: [], contents: []
     },
     {
-        id: "MUON_ANTINEUTRINO", name: "Muon Antineutrino", anti: "MUON_NEUTRINO", mass: 0, generation: 2,
+        id: "MUON_ANTINEUTRINO", name: "Muon Antineutrino", anti: "MUON_NEUTRINO", latex: "\\overline{\\nu_{\\mu}}", mass: 0, generation: 2,
         charge3: 0, baryonCount: 0, leptonCount: -1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: true, additionalIds: [], contents: []
     },
     {
-        id: "TAU_NEUTRINO", name: "Tau Neutrino", anti: "TAU_ANTINEUTRINO", mass: 0, generation: 3,
+        id: "TAU_NEUTRINO", name: "Tau Neutrino", anti: "TAU_ANTINEUTRINO", latex: "\\nu_{\\tau}", mass: 0, generation: 3,
         charge3: 0, baryonCount: 0, leptonCount: 1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: true, additionalIds: [], contents: []
     },
     {
-        id: "TAU_ANTINEUTRINO", name: "Tau Antineutrino", anti: "TAU_NEUTRINO", mass: 0, generation: 3,
+        id: "TAU_ANTINEUTRINO", name: "Tau Antineutrino", anti: "TAU_NEUTRINO", latex: "\\overline{\\nu_{\\tau}}", mass: 0, generation: 3,
         charge3: 0, baryonCount: 0, leptonCount: -1, isLepton: true, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: true, additionalIds: [], contents: []
     },
 
     // Bosons
     {
-        id: "PHOTON", name: "Photon", anti: "PHOTON", mass: 0, generation: 0,
-        charge3: 0, baryonCount: 0, isLepton: false, isBoson: true, isQuark: false,
+        id: "PHOTON", name: "Photon", anti: "PHOTON", latex: "\\gamma", mass: 0, generation: 0,
+        charge3: 0, baryonCount: 0, isLepton: false, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: []
     },
     {
-        id: "W_PLUS", name: "W+", anti: "W_MINUS", mass: 80420, generation: 0,
-        charge3: 3, baryonCount: 0, isLepton: false, isBoson: true, isQuark: false,
+        id: "W_PLUS", name: "W+", anti: "W_MINUS", latex: "W^{+}", mass: 80420, generation: 0,
+        charge3: 3, baryonCount: 0, isLepton: false, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: []
     },
     {
-        id: "W_MINUS", name: "W-", anti: "W_PLUS", mass: 91190, generation: 0,
-        charge3: -3, baryonCount: 0, isLepton: false, isBoson: true, isQuark: false,
+        id: "W_MINUS", name: "W-", anti: "W_PLUS", latex: "W^{-}", mass: 91190, generation: 0,
+        charge3: -3, baryonCount: 0, isLepton: false, isBoson: false, isQuark: false,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: []
     },
 
     // 8xGluons
-
+    {
+        id: "GLUON", name: "Gluon", anti: "Glion", latex: "g", mass: 0, generation: 0,
+        charge3: 0, baryonCount: 0, isLepton: false, isBoson: false, isQuark: false,
+        isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: []
+    },
     // Baryons
 
 

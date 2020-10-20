@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { InteractionService } from './services/interaction.service';
+import { RenderService } from './services/render.service';
 
 @Component({
   selector: 'app-root',
@@ -14,16 +17,30 @@ import { Component } from '@angular/core';
       </div>
 
       <div class="col-md-3 m-0" style="border: 1px solid;">
-        <app-toolbox style="height: 100%">
-        </app-toolbox>
+        <app-side-toolbar style="height: 100%">
+        </app-side-toolbar>
       </div>
     </div>
   </div>
 </div>
-    <router-outlet></router-outlet>
   `,
   styles: []
 })
 export class AppComponent {
   title = 'feynman';
+
+  constructor(private interactionService: InteractionService, private route: ActivatedRoute, private renderService: RenderService) {
+    // interactionService.loadExampleInteraction("Pion Exchange")
+  }
+
+  ngOnInit() {
+    this.route.queryParamMap.subscribe((params) => {
+      let example = params.get("example")
+      if (example && example != "") {
+        this.renderService.clear()
+        this.renderService.drawGrid()
+        this.interactionService.loadExampleInteraction(example)
+      }
+    })
+  }
 }
