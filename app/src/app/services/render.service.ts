@@ -87,15 +87,8 @@ export class RenderService {
             this.clearLine(oldLine)
             this.drawLine(line)
 
-            // this.clearArrow(oldLine)
-            // this.canvas.add(this.renderArrow(line))
-
-            // this.clearSymbol(oldLine)
-            // this.drawSymbol(line)
-
             this.interaction = this.interactionService.update(oldLine, line)
             this.selected$.next(line)
-            // this.canvas.renderAll()
           }
         }
       }

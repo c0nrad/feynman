@@ -10,35 +10,58 @@ import { InteractionService } from '../../services/interaction.service'
   selector: 'app-side-toolbar',
   template: `
     <div>
-      <div *ngIf="selected">
-        <h3>Selected</h3>
-        <p>{{selected.particle.id}}</p>
+   
+    <div *ngIf="selected">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="d-inline-block card-title">{{selected.particle.id}}</h5>
+          <h6 class="d-inline-block card-subtitle mb-2 text-muted pl-1">({{selected.a.X}}, {{selected.a.Y}}) -> ({{selected.b.X}}, {{selected.b.Y}})</h6>
+          <div>
+          <button class="btn btn-danger">Delete</button>
+          <button class="btn btn-info">Replace</button>
+          <button class="btn btn-info">Anti Particle</button>
+          </div>
+          </div>
       </div>
-      <h3> {{interaction.name || "Interaction"}} </h3>
-      <strong>Stats</strong>
-      <ul>
-        <li>Charge In: {{interaction.chargeIn()}}</li>
-        <li>Charge Out: {{interaction.chargeOut()}}</li>
-        <li>Baryon In: {{interaction.baryonCountIn()}}</li>
-        <li>Baryon Out: {{interaction.baryonCountOut()}}</li>
-        <li>Lepton-Electron In: {{interaction.leptonCountIn(1)}}</li>
-        <li>Lepton-Electron Out: {{interaction.leptonCountOut(1)}}</li>
-        <li>Lepton-Muon In: {{interaction.leptonCountIn(2)}}</li>
-        <li>Lepton-Muon Out: {{interaction.leptonCountOut(2)}}</li>
-        <li>Lepton-Tau In: {{interaction.leptonCountIn(3)}}</li>
-        <li>Lepton-Tau Out: {{interaction.leptonCountOut(3)}}</li>
-        <li>Mass In: {{interaction.massIn()}} MeV/c^2</li>
-        <li>Mass Out: {{interaction.massOut()}} MeV/c^2</li>
-      </ul>
+    </div>
 
+   
+    
 
-      <strong>Validation</strong>
-      <ul>
-        <li *ngFor="let vError of validationErrors">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="d-inline-block card-title">Interaction  </h5>
+            <h6 class="d-inline-block card-subtitle mb-2 text-muted pl-1">{{interaction.name || "Untitled"}}</h6>
+            <table class="table table-sm">
+              <tr><th>Property</th><th>In</th><th>Out</th>
+              
+              <tr>
+                <td>Charge</td><td>{{interaction.chargeIn()}}</td><td>{{interaction.chargeOut()}}</td>
+              </tr>
+
+              <tr><td>Baryon</td><td>{{interaction.baryonCountIn()}}</td><td>{{interaction.baryonCountOut()}}</td></tr>
+            <tr><td>Lepton-Electron</td><td>{{interaction.leptonCountIn(1)}}</td><td>{{interaction.leptonCountOut(1)}}</td></tr>
+            <tr><td>Lepton-Muon</td><td>{{interaction.leptonCountIn(2)}}</td><td>{{interaction.leptonCountOut(2)}}</td></tr>
+            <tr><td>Lepton-Tau</td><td>{{interaction.leptonCountIn(3)}}</td><td>{{interaction.leptonCountOut(3)}}</td></tr>
+            <tr><td>Mass</td><td>{{interaction.massIn()}}</td><td>{{interaction.massOut()}}</td></tr>
+            </table>
+        
+          </div>
+        </div>
+   
+        <div class="card">
+        <div class="card-body">
+          <h5 class="d-inline-block card-title">Validation  </h5>
+          <h6 class="d-inline-block card-subtitle mb-2 text-muted pl-1">{{validationErrors.length}} issues</h6>
+ 
+          <p class="text-danger" *ngFor="let vError of validationErrors">
           {{vError.id}} - {{vError.description}}
-         </li>
-         <p *ngIf="validationErrors.length == 0">All good!</p>
-      </ul>
+         </p>
+ 
+        </div>
+      </div>
+
+
     </div>
   `,
   styles: [

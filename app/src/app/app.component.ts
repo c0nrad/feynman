@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Interaction } from '../../../lib/interaction';
 import { InteractionService } from './services/interaction.service';
 import { RenderService } from './services/render.service';
 
@@ -8,15 +9,27 @@ import { RenderService } from './services/render.service';
   template: `
   <div class="height: 100%">
     <app-header></app-header>
+    <app-top-toolbar class="shadow-lg"></app-top-toolbar>
 
-  <div class="container-fluid">
+  <div class="container-fluid p-0">
     
-    <div class="row" style="height: 100%">
-      <div class="col-md-9 p-0 m-0" style="height: 100%">
+    <div class="row no-gutters" style="height: 100%">
+      <div class="col-md-9 no-gutters" style="height: 100%">
         <app-editor></app-editor>
+
+        <div class="fixed-bottom">
+          <div class="card text-centered">
+          <div class="card-body">  
+          <p class="text-centered card-text">
+            
+            <ng-katex [equation]="interaction.equation()"></ng-katex>
+            </p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="col-md-3 m-0" style="border: 1px solid;">
+      <div class="col-md-3 no-gutters">
         <app-side-toolbar style="height: 100%">
         </app-side-toolbar>
       </div>
@@ -29,15 +42,22 @@ import { RenderService } from './services/render.service';
 export class AppComponent {
   title = 'feynman';
 
+  interaction: Interaction
+
   constructor(private interactionService: InteractionService, private route: ActivatedRoute,
     private renderService: RenderService, private router: Router) {
     // interactionService.loadExampleInteraction("Pion Exchange")
+    this.interaction = new Interaction("", [])
   }
 
   ngOnInit() {
     if (!this.route.snapshot.queryParamMap.get("example")) {
       this.router.navigate(["/"], { queryParams: { "example": "MUON_DECAY" } })
     }
+
+    this.interactionService.interaction$.subscribe((i) => {
+      this.interaction = i
+    })
 
     this.route.queryParamMap.subscribe((params) => {
       let example = params.get("example")

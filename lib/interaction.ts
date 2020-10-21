@@ -184,6 +184,21 @@ export class Interaction {
         }
         return true
     }
+
+    equation(): string {
+        let out = ""
+        for (let l of this.in()) {
+            out += l.particle.latex + " +"
+        }
+        out = out.substr(0, out.length - 2) + " \\implies "
+
+
+        for (let l of this.out()) {
+            out += l.particle.latex + " +"
+        }
+        out = out.substr(0, out.length - 2)
+        return out
+    }
 }
 
 export function getInteractionByName(name: string): Interaction {
