@@ -65,27 +65,38 @@ export class RenderService {
 
           // @ts-ignore
           if (event.target.get("classification") == "selected_a") {
+
             //@ts-ignore  
-            this.selectedFabric?.set({ "x1": event.target.left, "y1": event.target.top })
+            // this.selectedFabric?.set({ "x1": event.target.left, "y2": event.target.top })
             line.a.X = this.fromX(event.target.left)
             line.a.Y = this.fromY(event.target.top)
-          } else {
+
+            // @ts-ignore
+          } else if (event.target.get("classification") == "selected_b") {
             //@ts-ignore  
-            this.selectedFabric?.set({ "x2": event.target.left, "y2": event.target.top })
+            // this.selectedFabric?.set({ "x2": event.target.left, "y2": event.target.top })
             line.b.X = this.fromX(event.target.left)
             line.b.Y = this.fromY(event.target.top)
+          } else {
+            throw new Error("this should not be selectable")
           }
-          this.selectedFabric?.setCoords()
-          this.selectedFabric?.set('dirty', true)
+          // this.selectedFabric?.setCoords()
+          // this.selectedFabric?.set('dirty', true)
 
-          this.clearArrow(oldLine)
-          this.canvas.add(this.renderArrow(line))
+          if (!oldLine.equals(line)) {
+            this.clearLine(oldLine)
+            this.drawLine(line)
 
-          this.clearSymbol(oldLine)
-          this.drawSymbol(line)
+            // this.clearArrow(oldLine)
+            // this.canvas.add(this.renderArrow(line))
 
-          this.interaction = this.interactionService.update(oldLine, line)
-          this.selected$.next(line)
+            // this.clearSymbol(oldLine)
+            // this.drawSymbol(line)
+
+            this.interaction = this.interactionService.update(oldLine, line)
+            this.selected$.next(line)
+            // this.canvas.renderAll()
+          }
         }
       }
     })
@@ -152,37 +163,49 @@ export class RenderService {
     return Math.round((yPos - this.gridOffset) / this.gridSpacing)
   }
 
+  drawLine(l: Line) {
+    let line: fabric.Object = {} as fabric.Object
+    if (l.particle.id == "PHOTON") {
+      line = this.renderPhoton(l)
+    } else if (l.particle.id == "W_MINUS" || l.particle.id == "W_PLUS" || l.particle.id == "Z") {
+      line = this.renderWeak(l)
+    } else if (l.particle.id == "GLUON") {
+      line = this.renderGluon(l)
+    } else {
+      line = new fabric.Line([this.x(l.a.X), this.y(l.a.Y), this.x(l.b.X), this.y(l.b.Y)], { stroke: 'black' })
+
+      this.canvas.add(this.renderArrow(l))
+    }
+
+    line.hasControls = false
+    line.hasBorders = false
+    line.selectable = false
+    line.lockMovementY = true
+    line.lockMovementX = true
+    line.hoverCursor = "pointer"
+
+    // @ts-ignore
+    line.set({ "line": l, "classification": "line" })
+    this.canvas.add(line)
+
+    this.drawSymbol(l)
+  }
+
+  clearLine(line: Line) {
+    for (let o of this.canvas.getObjects()) {
+      //@ts-ignore
+      if (o.get("line") && o.get("line").id == line.id) {
+        this.canvas.remove(o)
+      }
+    }
+  }
+
   drawInteraction(interaction: Interaction) {
     if (this.interaction && this.interaction.equals(interaction)) {
       return
     }
     for (let l of interaction.lines) {
-
-      let line: fabric.Object = {} as fabric.Object
-      if (l.particle.id == "PHOTON") {
-        line = this.renderPhoton(l)
-      } else if (l.particle.id == "W_MINUS" || l.particle.id == "W_PLUS" || l.particle.id == "Z") {
-        line = this.renderWeak(l)
-      } else if (l.particle.id == "GLUON") {
-        line = this.renderGluon(l)
-      } else {
-        line = new fabric.Line([this.x(l.a.X), this.y(l.a.Y), this.x(l.b.X), this.y(l.b.Y)], { stroke: 'black' })
-
-        this.canvas.add(this.renderArrow(l))
-      }
-
-      line.hasControls = false
-      line.hasBorders = false
-      line.selectable = false
-      line.lockMovementY = true
-      line.lockMovementX = true
-      line.hoverCursor = "pointer"
-
-      // @ts-ignore
-      line.set({ "line": l, "classification": "line" })
-      this.canvas.add(line)
-
-      this.drawSymbol(l)
+      this.drawLine(l)
     }
     this.interaction = interaction
   }

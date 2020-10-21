@@ -19,6 +19,10 @@ export class InteractionService {
   }
 
   update(old: Line, current: Line) {
+    if (old.equals(current)) {
+      return this.interaction$.value
+    }
+
     let currentInteraction = this.interaction$.value;
     currentInteraction.update(old, current)
     this.interaction$.next(currentInteraction)
