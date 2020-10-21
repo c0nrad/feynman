@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RenderService } from 'src/app/services/render.service';
 import { Interaction } from '../../../../../lib/interaction';
 import { Line } from '../../../../../lib/line';
+import { validateInteraction, ValidationError } from '../../../../../lib/validation';
+
 import { InteractionService } from '../../services/interaction.service'
 
 @Component({
@@ -10,7 +12,7 @@ import { InteractionService } from '../../services/interaction.service'
     <div>
       <div *ngIf="selected">
         <h3>Selected</h3>
-        <p>{{selected|json}}</p>
+        <p>{{selected.particle.id}}</p>
       </div>
       <h3> {{interaction.name || "Interaction"}} </h3>
       <strong>Stats</strong>
@@ -29,11 +31,13 @@ import { InteractionService } from '../../services/interaction.service'
         <li>Mass Out: {{interaction.massOut()}} MeV/c^2</li>
       </ul>
 
-      <strong>Lines</strong>
+
+      <strong>Validation</strong>
       <ul>
-        <li *ngFor="let line of interaction.lines">
-          ({{line.a.X}}, {{line.a.Y}}) -> ({{line.b.X}}, {{line.b.Y}}) {{line.particle.id}}
-        </li>
+        <li *ngFor="let vError of validationErrors">
+          {{vError.id}} - {{vError.description}}
+         </li>
+         <p *ngIf="validationErrors.length == 0">All good!</p>
       </ul>
     </div>
   `,
@@ -44,15 +48,18 @@ export class SideToolbarComponent implements OnInit {
 
   interaction: Interaction
   selected?: Line
+  validationErrors: ValidationError[]
 
   constructor(private renderService: RenderService, private interactionService: InteractionService) {
     this.interaction = {} as Interaction
     this.selected = undefined
+    this.validationErrors = []
   }
 
   ngOnInit(): void {
     this.interactionService.interaction$.subscribe((interaction) => {
       this.interaction = interaction
+      this.validationErrors = validateInteraction(interaction)
       console.log("Side-Toolbar", interaction)
     })
 

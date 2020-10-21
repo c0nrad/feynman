@@ -38,9 +38,9 @@ var ErrorDescriptions = [
 export function validateInteraction(interaction: Interaction): ValidationError[] {
     let out = []
 
-    if (!isLinesConnected(interaction.lines)) {
-        out.push(new ValidationError("NOT_CONNECTED", []))
-    }
+    // if (!isLinesConnected(interaction.lines)) {
+    //     out.push(new ValidationError("NOT_CONNECTED", []))
+    // }
 
     let overlapping = overlappingLines(interaction.lines)
     if (overlapping.length != 0) {

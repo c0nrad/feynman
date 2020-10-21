@@ -13,6 +13,7 @@ import { InteractionService } from './interaction.service';
 export class RenderService {
   canvas: fabric.Canvas
   gridSpacing: number
+  gridOffset: number
   interaction?: Interaction
 
   selected$: BehaviorSubject<Line>
@@ -22,6 +23,7 @@ export class RenderService {
 
   constructor(private interactionService: InteractionService) {
     this.gridSpacing = 75
+    this.gridOffset = this.gridSpacing / 2
     this.canvas = new fabric.Canvas(null)
     this.selected$ = new BehaviorSubject<Line>(this.emptyLine)
   }
@@ -54,8 +56,8 @@ export class RenderService {
       if (event.target && (event.target.get("classification") == "selected_a" || event.target.get("classification") == "selected_b")) {
         if (event.target.left && event.target.top) {
           event.target.set({
-            left: Math.round(event.target.left / this.gridSpacing) * this.gridSpacing,
-            top: Math.round(event.target.top / this.gridSpacing) * this.gridSpacing
+            left: Math.round((event.target.left - this.gridOffset) / this.gridSpacing) * this.gridSpacing + this.gridOffset,
+            top: Math.round((event.target.top - this.gridOffset) / this.gridSpacing) * this.gridSpacing + this.gridOffset
           })
 
           let oldLine = this.selected$.value.clone()
@@ -127,8 +129,8 @@ export class RenderService {
       size = this.canvas.getHeight();
     }
 
-    for (let x = this.gridSpacing; x < window.innerWidth; x += this.gridSpacing) {
-      for (let y = this.gridSpacing; y < window.innerHeight; y += this.gridSpacing) {
+    for (let x = this.gridOffset; x < window.innerWidth; x += this.gridSpacing) {
+      for (let y = this.gridOffset; y < window.innerHeight; y += this.gridSpacing) {
         var circle = new fabric.Circle({ radius: 1, fill: 'gray', left: x, top: y, selectable: false })
         this.canvas.add(circle);
       }
@@ -136,18 +138,18 @@ export class RenderService {
   }
 
   x(x: number) {
-    return x * this.gridSpacing
+    return x * this.gridSpacing + this.gridOffset
   }
   y(y: number) {
-    return y * this.gridSpacing
+    return y * this.gridSpacing + this.gridOffset
   }
 
   fromX(xPos: number): number {
-    return Math.round(xPos / this.gridSpacing)
+    return Math.round((xPos - this.gridOffset) / this.gridSpacing)
   }
 
   fromY(yPos: number): number {
-    return Math.round(yPos / this.gridSpacing)
+    return Math.round((yPos - this.gridOffset) / this.gridSpacing)
   }
 
   drawInteraction(interaction: Interaction) {
@@ -309,15 +311,15 @@ export class RenderService {
     let amplitude = 10;
     let wavelength = 8;
 
-    let length = line.left().distance(line.right())
+    let length = line.left().distance(line.right()) * this.gridSpacing
 
     let positive = 1
     points.push({ x: 0, y: 0 })
-    for (let i = wavelength / 2; i < this.x(length); i += wavelength) {
+    for (let i = wavelength / 2; i < length; i += wavelength) {
       points.push({ x: i, y: amplitude * positive })
       positive *= -1
     }
-    points.push({ x: this.x(length), y: 0 })
+    points.push({ x: length, y: 0 })
 
     let pLine = new fabric.Polyline(points, {
       stroke: "red", top:
@@ -335,18 +337,18 @@ export class RenderService {
     let amplitude = 10;
     let wavelength = 3;
 
-    let length = line.left().distance(line.right())
+    let length = line.left().distance(line.right()) * this.gridSpacing
 
     points.push({ x: 0, y: 0 })
-    for (let i = 0; i < this.x(length) + 2; i += 1) {
-      if (i + 10 * Math.sin(i / (wavelength)) >= this.x(length)) {
+    for (let i = 0; i < length + 2; i += 1) {
+      if (i + 10 * Math.sin(i / (wavelength)) >= length) {
         break
       }
       points.push({
         x: (i + 10 * Math.sin(i / (wavelength))), y: amplitude * (Math.cos(i / wavelength))
       })
     }
-    points.push({ x: this.x(length), y: 0 })
+    points.push({ x: length, y: 0 })
 
     let pLine = new fabric.Polyline(points, {
       stroke: "red", top:
@@ -363,9 +365,12 @@ export class RenderService {
     let midpoint = line.midpoint()
     let size = 15
 
-    let t = new fabric.Triangle({ originX: "center", originY: "center", height: size, width: size * .8, top: this.y(midpoint.Y), left: this.x(midpoint.X) })
+    let t = new fabric.Triangle({
+      originX: "center", originY: "center", height: size, width: size * .8, top: this.y(midpoint.Y), left: this.x(midpoint.X),
+      selectable: false, evented: false
+    })
     if (line.particle.isAnti()) {
-      t.rotate(+180 - line.angle())
+      t.rotate(line.angle() - 90)
     } else {
       t.rotate(line.angle() + 90)
     }

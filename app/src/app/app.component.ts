@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InteractionService } from './services/interaction.service';
 import { RenderService } from './services/render.service';
 
@@ -29,11 +29,16 @@ import { RenderService } from './services/render.service';
 export class AppComponent {
   title = 'feynman';
 
-  constructor(private interactionService: InteractionService, private route: ActivatedRoute, private renderService: RenderService) {
+  constructor(private interactionService: InteractionService, private route: ActivatedRoute,
+    private renderService: RenderService, private router: Router) {
     // interactionService.loadExampleInteraction("Pion Exchange")
   }
 
   ngOnInit() {
+    if (!this.route.snapshot.queryParamMap.get("example")) {
+      this.router.navigate(["/"], { queryParams: { "example": "MUON_DECAY" } })
+    }
+
     this.route.queryParamMap.subscribe((params) => {
       let example = params.get("example")
       if (example && example != "") {
