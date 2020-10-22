@@ -12,6 +12,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { SideToolbarComponent } from './components/side-toolbar/side-toolbar.component';
 import { RouterModule } from '@angular/router';
 import { TopToolbarComponent } from './components/top-toolbar/top-toolbar.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { TopToolbarComponent } from './components/top-toolbar/top-toolbar.compon
     BrowserModule,
     AppRoutingModule,
     RouterModule,
-    KatexModule
+    KatexModule,
+    NgbModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -283,9 +283,9 @@ var Particles: Particle[] = plainToClass(Particle, [
     { 'id': 'ANTIOMEGA_PLUS', 'anti': 'OMEGA_MINUS', 'name': 'Antiomega Minus', 'symbol': 'Ω−', 'contents': 'sss', 'mass': 1672.45, 'charge3': 3, 'generation': 0, 'baryonCount': -1, 'isBaryon': true, 'additionalIds': [] },
     { 'id': 'CHARMED_OMEGA', 'anti': 'ANTICHARMED_OMEGA', 'name': 'charmed omega', 'symbol': 'Ω∗0c(2770)', 'contents': 'ssc', 'mass': 2765.9, 'charge3': 0, 'generation': 0, 'baryonCount': 1, 'isBaryon': true, 'additionalIds': [] },
     { 'id': 'ANTICHARMED_OMEGA', 'anti': 'CHARMED_OMEGA', 'name': 'Anticharmed omega', 'symbol': 'Ω∗0c(2770)', 'contents': 'ssc', 'mass': 2765.9, 'charge3': 0, 'generation': 0, 'baryonCount': -1, 'isBaryon': true, 'additionalIds': [] },
-    { 'id': 'PION_PLUS', 'anti': 'PION_MINUS', 'name': 'Pion Plus', 'symbol': 'π+', 'contents': 'ud', 'mass': 139.57018, 'charge3': 3, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
-    { 'id': 'PION_MINUS', 'anti': 'PION_PLUS', 'name': 'Pion Minus', 'symbol': 'π+', 'contents': 'ud', 'mass': 139.57018, 'charge3': -3, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
-    { 'id': 'PION', 'name': 'Pion', 'symbol': 'π0', 'contents': '', 'mass': 134.9766, 'charge3': 0, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
+    { 'id': 'PION_PLUS', 'anti': 'PION_MINUS', 'name': 'Pion Plus', "latex": "\\pi^+", 'symbol': 'π+', 'contents': 'ud', 'mass': 139.57018, 'charge3': 3, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
+    { 'id': 'PION_MINUS', 'anti': 'PION_PLUS', 'name': 'Pion Minus', "latex": "\\pi^-", 'symbol': 'π+', 'contents': 'ud', 'mass': 139.57018, 'charge3': -3, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
+    { 'id': 'PION', 'name': 'Pion', 'symbol': 'π0', 'contents': '', "latex": "\\pi", 'mass': 134.9766, 'charge3': 0, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
     { 'id': 'ETA_MESON', 'name': 'Eta meson', 'symbol': 'η', 'contents': '', 'mass': 547.862, 'charge3': 0, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
     { 'id': 'ETA_PRIME_MESON', 'name': 'Eta prime meson', 'symbol': 'η′(958)', 'contents': '', 'mass': 957.78, 'charge3': 0, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
     { 'id': 'CHARMED_ETA_MESON', 'name': 'Charmed eta meson', 'symbol': 'ηc(1S)', 'contents': 'cc', 'mass': 2983.6, 'charge3': 0, 'generation': 0, 'baryonCount': 0, 'isMeson': true, 'additionalIds': [] },
@@ -336,3 +336,5 @@ export function getParticleByID(id: string): Particle {
     }
     return Object.assign(Object.create(p), p)
 }
+
+export { Particles }

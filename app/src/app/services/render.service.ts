@@ -12,8 +12,11 @@ import { InteractionService } from './interaction.service';
 })
 export class RenderService {
   canvas: fabric.Canvas
+
   gridSpacing: number
   gridOffset: number
+  hideGrid: boolean
+
   interaction?: Interaction
 
   selected$: BehaviorSubject<Line>
@@ -26,6 +29,7 @@ export class RenderService {
     this.gridOffset = this.gridSpacing / 2
     this.canvas = new fabric.Canvas(null)
     this.selected$ = new BehaviorSubject<Line>(this.emptyLine)
+    this.hideGrid = false
   }
 
   initCanvas() {
@@ -36,7 +40,8 @@ export class RenderService {
         //@ts-ignore
         let line = event.target.get("line")
 
-        if (line) {
+        //@ts-ignore
+        if (line && event.target.get("classification") == "line") {
           // @ts-ignore
           event.target.set("selected", true)
           this.selectedFabric = event.target
@@ -52,6 +57,7 @@ export class RenderService {
     })
 
     this.canvas.on("object:moving", (event) => {
+      console.log(event.target)
       //@ts-ignore
       if (event.target && (event.target.get("classification") == "selected_a" || event.target.get("classification") == "selected_b")) {
         if (event.target.left && event.target.top) {
@@ -84,7 +90,12 @@ export class RenderService {
           // this.selectedFabric?.set('dirty', true)
 
           if (!oldLine.equals(line)) {
+
+            console.log("oldLine.equals(line)")
             this.clearLine(oldLine)
+            this.clearSymbol(oldLine)
+            this.clearArrow(oldLine)
+
             this.drawLine(line)
 
             this.interaction = this.interactionService.update(oldLine, line)
@@ -135,9 +146,32 @@ export class RenderService {
 
     for (let x = this.gridOffset; x < window.innerWidth; x += this.gridSpacing) {
       for (let y = this.gridOffset; y < window.innerHeight; y += this.gridSpacing) {
+
         var circle = new fabric.Circle({ radius: 1, fill: 'gray', left: x, top: y, selectable: false })
+
+        //@ts-ignore 
+        circle.set({ "classification": "grid" })
         this.canvas.add(circle);
       }
+    }
+  }
+
+  clearGrid() {
+    for (let o of this.canvas.getObjects()) {
+      //@ts-ignore
+      if (o.get("classification") == "grid") {
+        this.canvas.remove(o)
+      }
+    }
+  }
+
+  toggleGrid() {
+    if (this.hideGrid) {
+      this.drawGrid()
+      this.hideGrid = false
+    } else {
+      this.clearGrid()
+      this.hideGrid = true
     }
   }
 
@@ -165,8 +199,10 @@ export class RenderService {
     } else if (l.particle.id == "GLUON") {
       line = this.renderGluon(l)
     } else {
-      line = new fabric.Line([this.x(l.a.X), this.y(l.a.Y), this.x(l.b.X), this.y(l.b.Y)], { stroke: 'black' })
-
+      line = new fabric.Line([this.x(l.a.X), this.y(l.a.Y), this.x(l.b.X), this.y(l.b.Y)], {
+        stroke: 'black',
+        padding: 20
+      })
       this.canvas.add(this.renderArrow(l))
     }
 
@@ -184,10 +220,20 @@ export class RenderService {
     this.drawSymbol(l)
   }
 
-  clearLine(line: Line) {
+  clearLineAll(line: Line) {
     for (let o of this.canvas.getObjects()) {
       //@ts-ignore
       if (o.get("line") && o.get("line").id == line.id) {
+        this.canvas.remove(o)
+      }
+    }
+  }
+
+
+  clearLine(line: Line) {
+    for (let o of this.canvas.getObjects()) {
+      //@ts-ignore
+      if (o.get("classification") == "line" && o.get("line") && o.get("line").id == line.id) {
         this.canvas.remove(o)
       }
     }
@@ -212,8 +258,8 @@ export class RenderService {
 
     for (let l of interaction.lines) {
       if (!this.knownLine(l)) {
-        this.clearLine(l)
-        console.log("draw line")
+        console.log("this.knownLine(l)")
+        this.clearLineAll(l)
         this.drawLine(l)
       }
 
@@ -229,8 +275,8 @@ export class RenderService {
         if (!interaction.lines.some((l) => {
           return l.id == fLine.id
         })) {
-          console.log('remove line')
-          this.clearLine(fLine)
+          console.log('remove line fLine')
+          this.clearLineAll(fLine)
         }
       }
     }
@@ -252,7 +298,7 @@ export class RenderService {
       selectable: true, originX: "center", originY: "center", hasControls: false, hasBorders: false
     })
     //@ts-ignore
-    aCircle.set("classification", "selected_a")
+    aCircle.set({ "classification": "selected_a", "line": selected })
     this.canvas.add(aCircle);
 
     var bCircle = new fabric.Circle({
@@ -260,7 +306,7 @@ export class RenderService {
       originX: "center", originY: "center", hasControls: false, hasBorders: false
     })
     //@ts-ignore
-    bCircle.set({ "classification": "selected_b" })
+    bCircle.set({ "classification": "selected_b", "line": selected })
     this.canvas.add(bCircle);
   }
 
@@ -306,11 +352,11 @@ export class RenderService {
     if (line.particle.latex == "") {
       let t = new fabric.Text(line.particle.id, {
         fontSize: 15,
-        left: left,
-        top: top,
-        originX: "center",
-        originY: "center"
       });
+
+      //@ts-ignore
+      t.set({ "originX": "center", "originY": "center", left: left, top: top, hasControls: false, selectable: false, classification: "symbol", "line": line })
+
       t.hasControls = false
       this.canvas.add(t)
     } else {

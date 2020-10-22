@@ -189,13 +189,20 @@ export class Interaction {
     equation(): string {
         let out = ""
         for (let l of this.in()) {
-            out += l.particle.latex + " +"
+
+            if (l.particle.latex != "")
+                out += l.particle.latex + " +"
+            else
+                out += l.particle.id + " +"
         }
         out = out.substr(0, out.length - 2) + " \\implies "
 
 
         for (let l of this.out()) {
-            out += l.particle.latex + " +"
+            if (l.particle.latex != "")
+                out += l.particle.latex + " +"
+            else
+                out += l.particle.id + " +"
         }
         out = out.substr(0, out.length - 2)
         return out

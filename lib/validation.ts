@@ -86,7 +86,7 @@ export function validateInteraction(interaction: Interaction): ValidationError[]
 
     for (let p of interaction.points()) {
         let v = interaction.vertex(p)
-        if (v.lines.length == 2 && v.lines[0].id != v.lines[1].id && !v.hasParticle("PHOTON") && !v.hasParticle("GLUON") &&
+        if (v.lines.length == 2 && v.lines[0].particle.id != v.lines[1].particle.id && !v.hasParticle("PHOTON") && !v.hasParticle("GLUON") &&
             !v.hasParticle("W_PLUS") && !v.hasParticle("W_MINUS") &&
             !v.hasParticle("Z") && !v.hasParticle("GRAVITON")) {
             out.push(new ValidationError("MISSING_BOSON", []))

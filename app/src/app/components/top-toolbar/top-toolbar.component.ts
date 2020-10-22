@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { InteractionService } from 'src/app/services/interaction.service';
+import { RenderService } from 'src/app/services/render.service';
 import { Line } from '../../../../../lib/line';
-import { Particle } from '../../../../../lib/particle';
+import { Particle, Particles } from '../../../../../lib/particle';
 
 @Component({
   selector: 'app-top-toolbar',
@@ -13,7 +16,7 @@ import { Particle } from '../../../../../lib/particle';
           <p class="text-center">Bosons</p>
           <div class="row no-gutters">
             <div class="col-md-6 no-gutters" *ngFor="let p of bosons">
-              <button type="button" class="btn btn-block btn-light" (click)="addLine(p.id)">
+              <button type="button" class="btn btn-block btn-light" (click)="addParticle(p.id)">
                   <ng-katex [equation]="p.symbol"></ng-katex></button>
             </div>
           </div>
@@ -23,7 +26,7 @@ import { Particle } from '../../../../../lib/particle';
           <p class="text-center">Quarks</p>
           <div class="row no-gutters">
             <div class="col-md-4 no-gutters" *ngFor="let p of quarks">
-              <button type="button" class="btn btn-block btn-light" (click)="addLine(p.id)">
+              <button type="button" class="btn btn-block btn-light" (click)="addParticle(p.id)">
                   <ng-katex [equation]="p.symbol"></ng-katex></button>
             </div>
           </div>
@@ -33,7 +36,7 @@ import { Particle } from '../../../../../lib/particle';
           <p class="text-center">Leptons</p>
           <div class="row no-gutters">
             <div class="col-md-4 no-gutters" *ngFor="let p of leptons">
-              <button type="button" class="btn btn-block btn-light" (click)="addLine(p.id)">
+              <button type="button" class="btn btn-block btn-light" (click)="addParticle(p.id)">
                   <ng-katex [equation]="p.symbol"></ng-katex></button>
             </div>
           </div>
@@ -42,13 +45,22 @@ import { Particle } from '../../../../../lib/particle';
 
         <div class="col-md-2">
           <p class="text-center">Particles</p>
-          <input placeholder="Particle Search" class="form-control">
-          <button class="float-right btn btn-light">Insert</button>
+          <input placeholder="Particle Search" class="form-control" [(ngModel)]="newParticle" 
+           [ngbTypeahead]="addParticleSearch">
+          <button class="float-right btn btn-light" (click)="addParticle(newParticle)">Insert</button>
           </div>
 
         <div class="col-md-2">
           <p class="text-center">Options</p>
-          <input type="checkbox">Hide Grid
+
+          <div class="form-check">
+          <input type="checkbox" (change)="toggleGrid()" class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+        <label class="form-check-label" for="defaultCheck1">
+        Hide Grid
+        </label>
+      </div>
+
+
           <br>
 
         </div>
@@ -66,7 +78,10 @@ export class TopToolbarComponent implements OnInit {
   quarks: ParticleID[]
   leptons: ParticleID[]
 
-  constructor(private interactionService: InteractionService) {
+  newParticle: string
+
+  constructor(private interactionService: InteractionService, private renderService: RenderService) {
+    this.newParticle = ""
     this.bosons = [
       { id: "PHOTON", symbol: "\\gamma" },
       { id: "W_MINUS", symbol: "W^{-/+}" },
@@ -93,7 +108,8 @@ export class TopToolbarComponent implements OnInit {
     ]
   }
 
-  addLine(id: string) {
+  addParticle(id: string) {
+    this.newParticle = ""
     this.interactionService.addParticle(id)
   }
 
@@ -101,6 +117,17 @@ export class TopToolbarComponent implements OnInit {
 
   }
 
+  addParticleSearch(text$: Observable<string>) {
+    return text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term => term.length < 1 ? []
+        : Particles.map(p => p.id).filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+  }
+
+  toggleGrid() {
+    this.renderService.toggleGrid()
+  }
 }
 
 interface ParticleID {
