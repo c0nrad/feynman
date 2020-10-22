@@ -64,42 +64,42 @@ var Particles: Particle[] = plainToClass(Particle, [
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "CHARM", name: "Charm Quark", anti: "ANTI_CHARM", mass: 1200, generation: 2,
+        id: "CHARM", name: "Charm Quark", anti: "ANTI_CHARM", latex: "c", mass: 1200, generation: 2,
         charge3: 2, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTI_CHARM", name: "Charm Antiquark", anti: "CHARM", mass: 1200, generation: 2,
+        id: "ANTI_CHARM", name: "Charm Antiquark", anti: "CHARM", latex: "\\overline{c}", mass: 1200, generation: 2,
         charge3: -2, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "STRANGE", name: "Strange Quark", anti: "ANTI_STRANGE", mass: 120, generation: 2,
+        id: "STRANGE", name: "Strange Quark", anti: "ANTI_STRANGE", latex: "s", mass: 120, generation: 2,
         charge3: -1, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTI_STRANGE", name: "Strange Antiquark", anti: "STRANGE", mass: 120, generation: 2,
+        id: "ANTI_STRANGE", name: "Strange Antiquark", anti: "STRANGE", latex: "\\overline{s}", mass: 120, generation: 2,
         charge3: 1, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "TOP", name: "Top Quark", anti: "ANTI_TOP", mass: 174000, generation: 3,
+        id: "TOP", name: "Top Quark", anti: "ANTI_TOP", latex: "t", mass: 174000, generation: 3,
         charge3: 2, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTI_TOP", name: "Top Antiquark", anti: "TOP", mass: 174000, generation: 3,
+        id: "ANTI_TOP", name: "Top Antiquark", anti: "TOP", latex: "\\overline{t}", mass: 174000, generation: 3,
         charge3: -2, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "BOTTOM", name: "Bottom Quark", anti: "ANTI_BOTTOM", mass: 4300, generation: 3,
+        id: "BOTTOM", name: "Bottom Quark", anti: "ANTI_BOTTOM", latex: "b", mass: 4300, generation: 3,
         charge3: -1, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },
     {
-        id: "ANTI_BOTTOM", name: "Bottom Antiquark", anti: "BOTTOM", mass: 4300, generation: 3,
+        id: "ANTI_BOTTOM", name: "Bottom Antiquark", anti: "BOTTOM", latex: "\\overline{b}", mass: 4300, generation: 3,
         charge3: 1, baryonCount: 0, isLepton: false, isBoson: false, isQuark: true,
         isBaryon: false, isMeson: false, isNeutrino: false, additionalIds: [], contents: []
     },

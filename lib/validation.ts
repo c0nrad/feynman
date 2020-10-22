@@ -32,7 +32,9 @@ var ErrorDescriptions = [
     { id: "GLUON_LEPTON_INTERACTION", description: "Leptons do not experience strong force" },
     { id: "PHOTON_NEUTRAL_INTERACTION", description: "Neutral particles do not experience electromagnetic force" },
 
-    { id: "ELECTROMAGNETIC_VERTEX_COUNT", description: "Electromagnetic vertex should have 3 lines" }
+    { id: "ELECTROMAGNETIC_VERTEX_COUNT", description: "Electromagnetic vertex should have 3 lines" },
+
+    { id: "MISSING_BOSON", description: "Vertex is missing a boson" }
 ]
 
 export function validateInteraction(interaction: Interaction): ValidationError[] {
@@ -81,6 +83,16 @@ export function validateInteraction(interaction: Interaction): ValidationError[]
             }
         }
     }
+
+    for (let p of interaction.points()) {
+        let v = interaction.vertex(p)
+        if (v.lines.length == 2 && v.lines[0].id != v.lines[1].id && !v.hasParticle("PHOTON") && !v.hasParticle("GLUON") &&
+            !v.hasParticle("W_PLUS") && !v.hasParticle("W_MINUS") &&
+            !v.hasParticle("Z") && !v.hasParticle("GRAVITON")) {
+            out.push(new ValidationError("MISSING_BOSON", []))
+        }
+    }
+
 
     return out
 }

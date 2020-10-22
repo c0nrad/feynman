@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { InteractionService } from 'src/app/services/interaction.service';
+import { Line } from '../../../../../lib/line';
 import { Particle } from '../../../../../lib/particle';
 
 @Component({
@@ -11,7 +13,7 @@ import { Particle } from '../../../../../lib/particle';
           <p class="text-center">Bosons</p>
           <div class="row no-gutters">
             <div class="col-md-6 no-gutters" *ngFor="let p of bosons">
-              <button type="button" class="btn btn-block btn-light">
+              <button type="button" class="btn btn-block btn-light" (click)="addLine(p.id)">
                   <ng-katex [equation]="p.symbol"></ng-katex></button>
             </div>
           </div>
@@ -21,7 +23,7 @@ import { Particle } from '../../../../../lib/particle';
           <p class="text-center">Quarks</p>
           <div class="row no-gutters">
             <div class="col-md-4 no-gutters" *ngFor="let p of quarks">
-              <button type="button" class="btn btn-block btn-light">
+              <button type="button" class="btn btn-block btn-light" (click)="addLine(p.id)">
                   <ng-katex [equation]="p.symbol"></ng-katex></button>
             </div>
           </div>
@@ -31,7 +33,7 @@ import { Particle } from '../../../../../lib/particle';
           <p class="text-center">Leptons</p>
           <div class="row no-gutters">
             <div class="col-md-4 no-gutters" *ngFor="let p of leptons">
-              <button type="button" class="btn btn-block btn-light">
+              <button type="button" class="btn btn-block btn-light" (click)="addLine(p.id)">
                   <ng-katex [equation]="p.symbol"></ng-katex></button>
             </div>
           </div>
@@ -44,12 +46,10 @@ import { Particle } from '../../../../../lib/particle';
           <button class="float-right btn btn-light">Insert</button>
           </div>
 
-
         <div class="col-md-2">
           <p class="text-center">Options</p>
           <input type="checkbox">Hide Grid
           <br>
-          <input type="checkbox">Hide Labels
 
         </div>
 
@@ -66,10 +66,10 @@ export class TopToolbarComponent implements OnInit {
   quarks: ParticleID[]
   leptons: ParticleID[]
 
-  constructor() {
+  constructor(private interactionService: InteractionService) {
     this.bosons = [
       { id: "PHOTON", symbol: "\\gamma" },
-      { id: "WEAK_MINUS", symbol: "W^{-/+}" },
+      { id: "W_MINUS", symbol: "W^{-/+}" },
       { id: "GLUON", symbol: "g" },
       { id: "Z", symbol: "Z" }
     ]
@@ -93,7 +93,12 @@ export class TopToolbarComponent implements OnInit {
     ]
   }
 
+  addLine(id: string) {
+    this.interactionService.addParticle(id)
+  }
+
   ngOnInit(): void {
+
   }
 
 }

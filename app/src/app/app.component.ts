@@ -9,7 +9,7 @@ import { RenderService } from './services/render.service';
   template: `
   <div class="height: 100%">
     <app-header></app-header>
-    <app-top-toolbar class="shadow-lg"></app-top-toolbar>
+    <app-top-toolbar class="shadow-sm d-none d-md-block"></app-top-toolbar>
 
   <div class="container-fluid p-0">
     

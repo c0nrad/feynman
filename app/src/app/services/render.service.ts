@@ -178,7 +178,7 @@ export class RenderService {
     line.hoverCursor = "pointer"
 
     // @ts-ignore
-    line.set({ "line": l, "classification": "line" })
+    line.set({ "line": l.clone(), "classification": "line" })
     this.canvas.add(line)
 
     this.drawSymbol(l)
@@ -193,13 +193,48 @@ export class RenderService {
     }
   }
 
+  knownLine(line: Line) {
+    for (let o of this.canvas.getObjects()) {
+      //@ts-ignore
+      if (o.get("line") && o.get("line").id == line.id && o.get("line").particle.id == line.particle.id &&
+        (o.get("left") == this.x(line.a.X) && o.get("top") == this.x(line.a.Y))) {
+        return true
+      }
+    }
+    return false
+  }
+
   drawInteraction(interaction: Interaction) {
-    if (this.interaction && this.interaction.equals(interaction)) {
-      return
-    }
+    // if (this.interaction && this.interaction.equals(interaction)) {
+    //   console.log("Equal interaction", this.interaction, interaction)
+    //   return
+    // }
+
     for (let l of interaction.lines) {
-      this.drawLine(l)
+      if (!this.knownLine(l)) {
+        this.clearLine(l)
+        console.log("draw line")
+        this.drawLine(l)
+      }
+
+      if (this.selected$.value.id == l.id) {
+        this.selected$.next(l)
+      }
     }
+
+    for (let o of this.canvas.getObjects()) {
+      //@ts-ignore
+      let fLine = o.get("line")
+      if (fLine) {
+        if (!interaction.lines.some((l) => {
+          return l.id == fLine.id
+        })) {
+          console.log('remove line')
+          this.clearLine(fLine)
+        }
+      }
+    }
+
     this.interaction = interaction
   }
 
@@ -305,19 +340,24 @@ export class RenderService {
 
   renderPhoton(line: Line): fabric.Object {
     let points = [];
-    let amplitude = 20;
-    let wavelength = 8;
+    let amplitude = 10;
+    let wavelength = 5;
 
-    let length = line.left().distance(line.right())
+    let length = line.left().distance(line.right()) * this.gridSpacing
 
-    for (let i = 0; i < this.x(length) + 2; i += 1) {
-      points.push({ x: i, y: amplitude * Math.cos(i / wavelength + Math.PI / 2) })
+    points.push({ x: 0, y: 0 })
+    for (let i = 0; i < length; i += 1) {
+      points.push({ x: i, y: amplitude * Math.sin(i / wavelength + Math.PI / 2) })
     }
+    points.push({ x: length, y: 0 })
 
     let pLine = new fabric.Polyline(points, {
       stroke: "red", top:
-        this.y(line.left().Y) - amplitude, left: this.x(line.left().X), fill: ''
+        this.y(line.left().Y), left: this.x(line.left().X), fill: '',
+      originX: "left", originY: "center"
     })
+    pLine.centeredRotation = false
+    pLine.rotate(line.angle())
 
     return pLine
   }

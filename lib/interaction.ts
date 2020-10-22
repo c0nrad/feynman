@@ -155,6 +155,7 @@ export class Interaction {
                 return
             }
         }
+        console.log(old, current, this.lines)
         throw new Error("could not find particle" + old + " " + current)
     }
 
