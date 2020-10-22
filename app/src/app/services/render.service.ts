@@ -147,7 +147,10 @@ export class RenderService {
     for (let x = this.gridOffset; x < window.innerWidth; x += this.gridSpacing) {
       for (let y = this.gridOffset; y < window.innerHeight; y += this.gridSpacing) {
 
-        var circle = new fabric.Circle({ radius: 1, fill: 'gray', left: x, top: y, selectable: false })
+        var circle = new fabric.Circle({
+          radius: 1, fill: 'gray', left: x, top: y, selectable: false,
+          originX: "center", originY: "center"
+        })
 
         //@ts-ignore 
         circle.set({ "classification": "grid" })
