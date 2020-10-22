@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Interaction } from '../../../lib/interaction';
 import { InteractionService } from './services/interaction.service';
 import { RenderService } from './services/render.service';
+
+declare let gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -48,6 +50,14 @@ export class AppComponent {
     private renderService: RenderService, private router: Router) {
     // interactionService.loadExampleInteraction("Pion Exchange")
     this.interaction = new Interaction("", [])
+
+    this.router.events.subscribe(event => {
+
+      if (event instanceof NavigationEnd) {
+        gtag('config', 'G-ZCNG5K7B89', { 'page_path': event.urlAfterRedirects });
+      }
+    });
+
   }
 
   ngOnInit() {
