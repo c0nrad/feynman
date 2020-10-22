@@ -61,15 +61,17 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    if (!this.route.snapshot.queryParamMap.get("example")) {
-      this.router.navigate(["/"], { queryParams: { "example": "MUON_DECAY" } })
-    }
+    // if (!this.route.snapshot.queryParamMap.get("example")) {
+    // console.log("this.route.snapshot", this.route.snapshot)
+    // this.router.navigate(["/"], { queryParams: { "example": "MUON_DECAY" } })
+    // }
 
     this.interactionService.interaction$.subscribe((i) => {
       this.interaction = i
     })
 
     this.route.queryParamMap.subscribe((params) => {
+      console.log("subscribe", params)
       let example = params.get("example")
       if (example && example != "") {
         this.renderService.clear()
